@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 //   THIS IS FOR THE CHARACTER MOVEMENT AND CAMERA
@@ -48,6 +49,17 @@ public class ThirdPersonMovement : MonoBehaviour
     // Update is called once per frame
     void Update() // ;W; THere's so much.
     {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        // To quite
+        if (Input.GetKey(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+
+
+
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
         if(isGrounded && velocity.y < 0)
@@ -76,10 +88,11 @@ public class ThirdPersonMovement : MonoBehaviour
             controller.Move(moveDir.normalized * speed * Time.deltaTime);
         }
 
+
         // JUMPING
         if(Input.GetButtonDown("Jump") && isGrounded)
         {
-            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            StartCoroutine(TimeDelay());
             anim.SetTrigger("Jump");
         }
 
@@ -144,9 +157,16 @@ public class ThirdPersonMovement : MonoBehaviour
         }
 
         //Punching
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Mouse0)) //Attack mouse button
+
         {
             anim.SetTrigger("IsPunching");
         }
+    }
+
+    IEnumerator TimeDelay()
+    {
+        yield return new WaitForSeconds(0.43F);
+        velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
     }
 }
